@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Intervix
+
+Intervix is a Next.js app that generates interview questions with an AI model and stores finalized interviews in Firebase.
+
+## Features
+
+- Generate interview questions for a given role/level/tech stack
+- Persist generated interviews to Firebase (`interviews` collection)
+
+## Prerequisites
+
+- Node.js (LTS recommended)
+- A Firebase project
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies
+
+```bash
+npm install
+```
+
+2. Configure environment variables
+
+Create a `.env.local` file in the project root and add the required Firebase/admin credentials.
+
+> The exact variable names are defined in the Firebase config used by the app (see `firebase/admin.ts`).
+
+3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## API: Generate interview questions
 
-## Learn More
+The app exposes an endpoint that generates and finalizes interview questions:
 
-To learn more about Next.js, take a look at the following resources:
+- **POST** `/api/vapi/generate`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Request body
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Send JSON with the following fields:
 
-## Deploy on Vercel
+- `type`: (string) Behavioral/technical preference (passed directly into the prompt)
+- `role`: (string) Job role
+- `level`: (string) Experience level
+- `techstack`: (string) Comma-separated tech stack (split by `,` in the API)
+- `amount`: (number) Amount of questions to generate
+- `userid`: (string) User identifier stored as `userId`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Response
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `200` on success: `{ "success": true }`
+- `500` on error: `{ "success": false, "error": ... }`
+
+### Notes
+
+- Generated questions are parsed from JSON and stored as `questions`.
+- The API saves documents to the Firebase collection: `interviews`.
+
+## Deployment
+
+This is a standard Next.js app and can be deployed on platforms like **Vercel**.
+
+1. Set the same environment variables in your production environment
+2. Deploy
+
+## Development scripts
+
+Common scripts from `package.json`:
+
+- `npm run dev` – start dev server
+- `npm run build` – production build
+- `npm start` – run production server

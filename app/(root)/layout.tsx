@@ -3,15 +3,16 @@ import Image from "next/image";
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
-import { isAuthenticated } from "@/lib/actions/auth.action";
+import { getCurrentUser } from "@/lib/actions/auth.action";
+import AccountMenu from "@/components/AccountMenu";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
-  const isUserAuthenticated = await isAuthenticated();
-  if (!isUserAuthenticated) redirect("/sign-up");
+  const user = await getCurrentUser();
+  if (!user) redirect("/sign-up");
 
   return (
     <div className="root-layout">
-      <nav>
+      <nav className="flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo.svg"
@@ -22,6 +23,8 @@ const Layout = async ({ children }: { children: ReactNode }) => {
           />
           <h2 className="text-primary-100">IntervixAI</h2>
         </Link>
+
+        <AccountMenu name={user.name} email={user.email} />
       </nav>
 
       {children}

@@ -5,13 +5,14 @@ import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import AccountMenu from "@/components/AccountMenu";
+import Footer from "@/components/Footer";
 
 const Layout = async ({ children }: { children: ReactNode }) => {
   const user = await getCurrentUser();
   if (!user) redirect("/sign-up");
 
   return (
-    <div className="root-layout">
+    <div className="root-layout flex min-h-dvh flex-col">
       <nav className="flex items-center justify-between gap-4 max-sm:flex-col max-sm:items-start">
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -31,7 +32,14 @@ const Layout = async ({ children }: { children: ReactNode }) => {
         />
       </nav>
 
-      {children}
+      <main className="flex-1">{children}</main>
+
+      {/* Dashboard footer (reusable) */}
+      {/* Placed after main content so it stays at the bottom without overlap */}
+      <div className="mt-auto">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <Footer />
+      </div>
     </div>
   );
 };

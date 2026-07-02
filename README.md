@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 Intervix
+# 🚀 Intervix AI
 
 ### AI-Powered Interview Preparation Platform
 

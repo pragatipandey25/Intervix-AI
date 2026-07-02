@@ -204,7 +204,7 @@ const Page = async () => {
               </p>
               <h3 className="mt-2 text-primary-100">Chart placeholder</h3>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-[160px] flex items-center justify-center">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-40 flex items-center justify-center">
               Weekly Progress chart will be rendered here.
             </div>
           </div>
@@ -218,7 +218,7 @@ const Page = async () => {
               </p>
               <h3 className="mt-2 text-primary-100">Chart placeholder</h3>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-[160px] flex items-center justify-center">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-40 flex items-center justify-center">
               Monthly Progress chart will be rendered here.
             </div>
           </div>
@@ -232,7 +232,7 @@ const Page = async () => {
               </p>
               <h3 className="mt-2 text-primary-100">Chart placeholder</h3>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-[160px] flex items-center justify-center">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-light-100/75 min-h-40 flex items-center justify-center">
               Skill Breakdown (radar/bar) chart will be rendered here.
             </div>
           </div>

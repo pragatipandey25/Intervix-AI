@@ -1,79 +1,388 @@
-# Intervix
+<div align="center">
 
-Intervix is a Next.js app that generates interview questions with an AI model and stores finalized interviews in Firebase.
+# 🚀 Intervix
 
-## Features
+### AI-Powered Interview Preparation Platform
 
-- Generate interview questions for a given role/level/tech stack
-- Persist generated interviews to Firebase (`interviews` collection)
+Prepare smarter. Practice confidently. Get AI-generated interview questions tailored to your role, experience, and tech stack.
 
-## Prerequisites
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=nextdotjs" />
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase" />
+  <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss" />
+  <img src="https://img.shields.io/badge/AI-Vapi-7C3AED?style=for-the-badge" />
+</p>
 
-- Node.js (LTS recommended)
-- A Firebase project
+</div>
 
-## Getting Started
+---
 
-1. Install dependencies
+## ✨ Overview
+
+**Intervix** is a modern AI-powered interview preparation platform built with **Next.js**, **Firebase**, and **Vapi AI**.
+
+It helps candidates practice realistic interviews by generating intelligent interview questions based on:
+
+- 💼 Job Role
+- 📈 Experience Level
+- 🧠 Technical Stack
+- 🎯 Interview Type
+- 🔢 Number of Questions
+
+Every generated interview is securely stored in Firebase, allowing users to revisit and continue their preparation anytime.
+
+---
+
+# ✨ Features
+
+### 🤖 AI Interview Generation
+
+Generate personalized interview questions using AI.
+
+- Technical Interviews
+- Behavioral Interviews
+- Custom Question Count
+- Multiple Tech Stacks
+
+---
+
+### 🎤 Interactive Interview Experience
+
+- Realistic interview flow
+- AI-generated questions
+- Interview completion tracking
+- Professional interview interface
+
+---
+
+### 📊 Dashboard
+
+- Interview statistics
+- Recent interviews
+- Quick actions
+- Continue previous interviews
+- Performance overview
+
+---
+
+### 👤 User Profile
+
+- Manage profile
+- Update personal information
+- Avatar support
+- Account settings
+
+---
+
+### 📚 Interview History
+
+- View completed interviews
+- Search previous sessions
+- Resume interviews
+- Performance records
+
+---
+
+### ⭐ Saved Questions
+
+Bookmark important interview questions for future practice.
+
+---
+
+### 📈 Performance Analytics
+
+Track your progress with insights including:
+
+- Average Score
+- Total Interviews
+- Practice Hours
+- Success Rate
+- AI Feedback
+
+---
+
+### 🔐 Authentication
+
+- Secure authentication
+- Protected routes
+- Firebase integration
+
+---
+
+### ☁ Firebase Integration
+
+Stores:
+
+- User information
+- Interview history
+- Generated questions
+- Performance records
+
+---
+
+# 🛠 Tech Stack
+
+| Category       | Technology         |
+| -------------- | ------------------ |
+| Framework      | Next.js 15         |
+| Language       | TypeScript         |
+| Styling        | Tailwind CSS       |
+| Database       | Firebase Firestore |
+| Authentication | Firebase Auth      |
+| AI             | Vapi AI            |
+| Icons          | Lucide React       |
+| Deployment     | Vercel             |
+
+---
+
+# 📂 Project Structure
+
+```bash
+Intervix/
+│
+├── app/
+│   ├── dashboard/
+│   ├── interview/
+│   ├── profile/
+│   ├── settings/
+│   ├── api/
+│
+├── components/
+│
+├── firebase/
+│
+├── lib/
+│
+├── public/
+│
+├── types/
+│
+├── hooks/
+│
+├── utils/
+│
+└── README.md
+```
+
+---
+
+# 🚀 Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/yourusername/intervix.git
+```
+
+Navigate into the project
+
+```bash
+cd intervix
+```
+
+Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Configure environment variables
+---
 
-Create a `.env.local` file in the project root and add the required Firebase/admin credentials.
+# ⚙ Environment Variables
 
-> The exact variable names are defined in the Firebase config used by the app (see `firebase/admin.ts`).
+Create a `.env.local`
 
-3. Run the development server
+```env
+# Firebase
+
+NEXT_PUBLIC_FIREBASE_API_KEY=
+
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+# Firebase Admin
+
+FIREBASE_CLIENT_EMAIL=
+
+FIREBASE_PRIVATE_KEY=
+
+# AI
+
+VAPI_API_KEY=
+```
+
+> Configure these using your Firebase project credentials.
+
+---
+
+# ▶ Running the Project
+
+Development
 
 ```bash
 npm run dev
 ```
 
-Open:
+Production Build
 
-- http://localhost:3000
+```bash
+npm run build
+```
 
-## API: Generate interview questions
+Run Production
 
-The app exposes an endpoint that generates and finalizes interview questions:
+```bash
+npm start
+```
 
-- **POST** `/api/vapi/generate`
+Visit
 
-### Request body
+```
+http://localhost:3000
+```
 
-Send JSON with the following fields:
+---
 
-- `type`: (string) Behavioral/technical preference (passed directly into the prompt)
-- `role`: (string) Job role
-- `level`: (string) Experience level
-- `techstack`: (string) Comma-separated tech stack (split by `,` in the API)
-- `amount`: (number) Amount of questions to generate
-- `userid`: (string) User identifier stored as `userId`
+# 🔗 API
 
-### Response
+## Generate Interview Questions
 
-- `200` on success: `{ "success": true }`
-- `500` on error: `{ "success": false, "error": ... }`
+```
+POST /api/vapi/generate
+```
 
-### Notes
+### Request
 
-- Generated questions are parsed from JSON and stored as `questions`.
-- The API saves documents to the Firebase collection: `interviews`.
+```json
+{
+  "type": "Technical",
+  "role": "Frontend Developer",
+  "level": "Mid Level",
+  "techstack": "React, Next.js, TypeScript",
+  "amount": 10,
+  "userid": "user123"
+}
+```
 
-## Deployment
+---
 
-This is a standard Next.js app and can be deployed on platforms like **Vercel**.
+### Success Response
 
-1. Set the same environment variables in your production environment
-2. Deploy
+```json
+{
+  "success": true
+}
+```
 
-## Development scripts
+---
 
-Common scripts from `package.json`:
+### Error Response
 
-- `npm run dev` – start dev server
-- `npm run build` – production build
-- `npm start` – run production server
+```json
+{
+  "success": false,
+  "error": "Something went wrong"
+}
+```
+
+---
+
+# 📦 Database
+
+Collection
+
+```
+interviews
+```
+
+Example document
+
+```json
+{
+  "userId": "user123",
+  "role": "Frontend Developer",
+  "level": "Mid",
+  "techstack": ["React", "Next.js"],
+  "questions": [],
+  "createdAt": "Timestamp"
+}
+```
+
+---
+
+# 🎯 Future Roadmap
+
+- AI Voice Interviews
+- Resume Analyzer
+- Coding Assessments
+- Company-specific Questions
+- AI Performance Reports
+- Leaderboard
+- Mock Interview Scheduling
+- Dark & Light Themes
+- Mobile Application
+
+---
+
+# 🚀 Deployment
+
+Deploy easily on **Vercel**
+
+```bash
+npm run build
+```
+
+Add the same environment variables in your deployment platform before deploying.
+
+---
+
+# 🤝 Contributing
+
+Contributions are always welcome.
+
+1. Fork the repository
+
+2. Create a feature branch
+
+```bash
+git checkout -b feature/amazing-feature
+```
+
+3. Commit changes
+
+```bash
+git commit -m "Added amazing feature"
+```
+
+4. Push
+
+```bash
+git push origin feature/amazing-feature
+```
+
+5. Open a Pull Request
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+<div align="center">
+
+### ⭐ If you found this project helpful, please consider giving it a star.
+
+Made with ❤️ using **Next.js**, **Firebase**, and **AI**
+
+</div>

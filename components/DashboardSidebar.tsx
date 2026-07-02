@@ -16,12 +16,18 @@ interface DashboardSidebarProps {
   user: User;
   totalInterviews: number;
   averageScore: number;
-  active?: "dashboard" | "profile" | "history" | "analytics";
+  active?: "dashboard" | "profile" | "history" | "analytics" | "interview";
 }
 
 const navigation = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard, key: "dashboard" },
   { label: "My Profile", href: "/profile", icon: UserRound, key: "profile" },
+  {
+    label: "Take Interviews",
+    href: "/interview",
+    icon: PlayCircle,
+    key: "interview",
+  },
   {
     label: "Interview History",
     href: "/interview/history",

@@ -78,7 +78,20 @@ export async function signIn(params: SignInParams) {
         message: "User does not exist. Create an account.",
       };
 
+    const userDoc = await db.collection("users").doc(userRecord.uid).get();
+    if (!userDoc.exists) {
+      await db.collection("users").doc(userRecord.uid).set({
+        name: userRecord.displayName || email.split("@")[0],
+        email,
+      });
+    }
+
     await setSessionCookie(idToken);
+
+    return {
+      success: true,
+      message: "Signed in successfully.",
+    };
   } catch (error: any) {
     console.log("");
 

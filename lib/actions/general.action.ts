@@ -1,3 +1,4 @@
+
 "use server";
 
 import { generateObject } from "ai";
@@ -18,9 +19,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
       .join("");
 
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash-001", {
-        structuredOutputs: false,
-      }),
+      model: google("gemini-2.5-flash-lite"),
       schema: feedbackSchema,
       prompt: `
         You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
@@ -97,29 +96,43 @@ export async function getLatestInterviews(
 
   const interviews = await db
     .collection("interviews")
-    .orderBy("createdAt", "desc")
     .where("finalized", "==", true)
-    .where("userId", "!=", userId)
-    .limit(limit)
     .get();
 
-  return interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+  return interviews.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Interview, "id">),
+    }))
+    .filter((interview) => interview.userId !== userId)
+    .sort((first, second) => {
+      const firstCreatedAt = new Date(first.createdAt).getTime();
+      const secondCreatedAt = new Date(second.createdAt).getTime();
+
+      return secondCreatedAt - firstCreatedAt;
+    })
+    .slice(0, limit) as Interview[];
 }
 
 export async function getInterviewsByUserId(
-  userId: string
+  userId: string | undefined | null
 ): Promise<Interview[] | null> {
+  if (!userId) return [];
+
   const interviews = await db
     .collection("interviews")
     .where("userId", "==", userId)
-    .orderBy("createdAt", "desc")
     .get();
 
-  return interviews.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Interview[];
+  return interviews.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...(doc.data() as Omit<Interview, "id">),
+    }))
+    .sort((first, second) => {
+      const firstCreatedAt = new Date(first.createdAt).getTime();
+      const secondCreatedAt = new Date(second.createdAt).getTime();
+
+      return secondCreatedAt - firstCreatedAt;
+    }) as Interview[];
 }

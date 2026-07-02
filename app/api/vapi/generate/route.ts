@@ -35,14 +35,14 @@ export async function POST(request: Request) {
       finalized: true,
       coverImage: getRandomInterviewCover(),
       createdAt: new Date().toISOString(),
-    }
+    };
 
     await db.collection("interviews").add(interview);
 
     return Response.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error(error);
-    return Response.json({ success: false, error }, { status: 500 });
+    console.error("Error:", error);
+    return Response.json({ success: false, error: error }, { status: 500 });
   }
 }
 

@@ -34,18 +34,18 @@ const InterviewCard = async ({
     }[normalizedType] || "bg-light-600";
 
   const formattedDate = dayjs(
-    feedback?.createdAt || createdAt || Date.now()
+    feedback?.createdAt || createdAt || Date.now(),
   ).format("MMM D, YYYY");
 
   return (
-    <div className="card-border w-[360px] max-sm:w-full min-h-96">
+    <div className="card-border w-90 max-sm:w-full min-h-96">
       <div className="card-interview">
         <div>
           {/* Type Badge */}
           <div
             className={cn(
               "absolute top-0 right-0 w-fit px-4 py-2 rounded-bl-lg",
-              badgeColor
+              badgeColor,
             )}
           >
             <p className="badge-text ">{normalizedType}</p>
@@ -57,7 +57,7 @@ const InterviewCard = async ({
             alt="cover-image"
             width={90}
             height={90}
-            className="rounded-full object-fit size-[90px]"
+            className="rounded-full object-fit size-22.5"
           />
 
           {/* Interview Role */}
@@ -71,6 +71,7 @@ const InterviewCard = async ({
                 width={22}
                 height={22}
                 alt="calendar"
+                className="h-auto w-auto"
               />
               <p>{formattedDate}</p>
             </div>

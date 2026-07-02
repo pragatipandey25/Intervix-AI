@@ -24,7 +24,11 @@ const Layout = async ({ children }: { children: ReactNode }) => {
           <h2 className="text-primary-100">IntervixAI</h2>
         </Link>
 
-        <AccountMenu name={user.name} email={user.email} />
+        <AccountMenu
+          name={user.name}
+          email={user.email}
+          avatarUrl={user.avatarUrl}
+        />
       </nav>
 
       {children}

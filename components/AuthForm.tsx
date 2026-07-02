@@ -57,6 +57,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
           name: name!,
           email,
           password,
+          avatarUrl: userCredential.user.photoURL,
         });
 
         if (!result.success) {

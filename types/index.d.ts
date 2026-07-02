@@ -15,6 +15,8 @@ interface Feedback {
 
 interface Interview {
   id: string;
+  company?: string;
+  duration?: string;
   role: string;
   level: string;
   questions: string[];
@@ -36,6 +38,13 @@ interface User {
   name: string;
   email: string;
   id: string;
+  avatarUrl?: string | null;
+  phoneNumber?: string | null;
+  role?: string | null;
+  country?: string | null;
+  timeZone?: string | null;
+  bio?: string | null;
+  createdAt?: string | null;
 }
 
 interface InterviewCardProps {
@@ -81,6 +90,19 @@ interface SignUpParams {
   name: string;
   email: string;
   password: string;
+  avatarUrl?: string | null;
+}
+
+interface UpdateUserProfileParams {
+  userId: string;
+  name: string;
+  email: string;
+  phoneNumber?: string;
+  role?: string;
+  country?: string;
+  timeZone?: string;
+  bio?: string;
+  avatarUrl?: string | null;
 }
 
 type FormType = "sign-in" | "sign-up";

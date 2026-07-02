@@ -26,7 +26,7 @@ export async function setSessionCookie(idToken: string) {
 }
 
 export async function signUp(params: SignUpParams) {
-  const { uid, name, email } = params;
+  const { uid, name, email, avatarUrl } = params;
 
   try {
     // check if user exists in db
@@ -41,6 +41,13 @@ export async function signUp(params: SignUpParams) {
     await db.collection("users").doc(uid).set({
       name,
       email,
+      avatarUrl: avatarUrl || null,
+      phoneNumber: null,
+      role: null,
+      country: null,
+      timeZone: null,
+      bio: null,
+      createdAt: new Date().toISOString(),
       // profileURL,
       // resumeURL,
     });
@@ -83,6 +90,17 @@ export async function signIn(params: SignInParams) {
       await db.collection("users").doc(userRecord.uid).set({
         name: userRecord.displayName || email.split("@")[0],
         email,
+        avatarUrl: userRecord.photoURL || null,
+        phoneNumber: null,
+        role: null,
+        country: null,
+        timeZone: null,
+        bio: null,
+        createdAt: new Date().toISOString(),
+      });
+    } else if (!userDoc.data()?.avatarUrl && userRecord.photoURL) {
+      await db.collection("users").doc(userRecord.uid).update({
+        avatarUrl: userRecord.photoURL,
       });
     }
 
@@ -107,6 +125,51 @@ export async function signOut() {
   const cookieStore = await cookies();
 
   cookieStore.delete("session");
+}
+
+export async function updateUserProfile(params: UpdateUserProfileParams) {
+  const {
+    userId,
+    name,
+    email,
+    phoneNumber,
+    role,
+    country,
+    timeZone,
+    bio,
+    avatarUrl,
+  } = params;
+
+  try {
+    await auth.updateUser(userId, {
+      displayName: name,
+      email,
+      photoURL: avatarUrl || undefined,
+    });
+
+    await db.collection("users").doc(userId).update({
+      name,
+      email,
+      phoneNumber: phoneNumber || null,
+      role: role || null,
+      country: country || null,
+      timeZone: timeZone || null,
+      bio: bio || null,
+      avatarUrl: avatarUrl || null,
+    });
+
+    return {
+      success: true,
+      message: "Profile updated successfully.",
+    };
+  } catch (error) {
+    console.error("Error updating profile:", error);
+
+    return {
+      success: false,
+      message: "Failed to update profile. Please try again.",
+    };
+  }
 }
 
 // Get current user from session cookie

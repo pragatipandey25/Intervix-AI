@@ -18,7 +18,7 @@ const SocialLink = ({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className={`group relative inline-flex items-center justify-center rounded-lg p-2 text-light-100/70 transition-transform transition-colors hover:translate-y-0.5 hover:scale-[1.1] ${hoverClass}`}
+      className={`group relative inline-flex items-center justify-center rounded-lg p-2 text-light-100/70 transition-colors hover:translate-y-0.5 hover:scale-[1.1] ${hoverClass}`}
     >
       <span className="sr-only">{label}</span>
       <Icon className="size-5" />

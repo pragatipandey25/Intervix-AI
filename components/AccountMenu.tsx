@@ -98,7 +98,7 @@ const AccountMenu = ({ name, email, avatarUrl }: AccountMenuProps) => {
     await firebaseSignOut(auth);
     await clearSession();
     setOpen(false);
-    router.replace("/login");
+    router.replace("/sign-up");
     router.refresh();
   };
 

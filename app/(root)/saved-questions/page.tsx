@@ -1,18 +1,20 @@
 import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/actions/auth.action";
+import SavedQuestionsClient from "@/components/SavedQuestionsClient";
+
+export const metadata = {
+  title: "Saved Questions | Intervix AI",
+  description: "Browse, bookmark, and review essential tech and behavioral interview questions.",
+};
 
 const Page = async () => {
   const user = await getCurrentUser();
-  if (!user) redirect("/sign-up");
+  if (!user) redirect("/sign-in");
 
   return (
-    <section className="flex flex-col gap-4 mt-8">
-      <h2>Saved Questions</h2>
-      <p>
-        Your saved questions library will live here. You can wire this page to
-        your question-saving flow later.
-      </p>
+    <section className="mt-6">
+      <SavedQuestionsClient user={user} />
     </section>
   );
 };

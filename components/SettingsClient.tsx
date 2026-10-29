@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types";
+import { toast } from "sonner";
+import { updateUserProfile } from "@/lib/actions/auth.action";
 
 interface SettingsClientProps {
   user: User;
@@ -82,7 +84,7 @@ const initialToggles: Record<ToggleKey, boolean> = {
 const SettingsClient = ({ user }: SettingsClientProps) => {
   const [displayName, setDisplayName] = useState(user.name || "");
   const [email, setEmail] = useState(user.email || "");
-  const [avatarUrl, setAvatarUrl] = useState(user.image || "");
+  const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl || (user as any).image || "");
   const [theme, setTheme] = useState<ThemeOption>("midnight");
   const [toggles, setToggles] = useState(initialToggles);
   const [savedState, setSavedState] = useState(
@@ -97,16 +99,29 @@ const SettingsClient = ({ user }: SettingsClientProps) => {
   const handleReset = () => {
     setDisplayName(user.name || "");
     setEmail(user.email || "");
-    setAvatarUrl(user.image || "");
+    setAvatarUrl(user.avatarUrl || (user as any).image || "");
     setTheme("midnight");
     setToggles(initialToggles);
     setSavedState("Settings were reset to your last saved baseline.");
   };
 
-  const handleSave = () => {
-    setSavedState(
-      "Changes saved. Connect this form to persistence when ready.",
-    );
+  const handleSave = async () => {
+    try {
+      if (user.id) {
+        await updateUserProfile({
+          userId: user.id,
+          name: displayName,
+          email,
+          avatarUrl,
+        });
+      }
+      localStorage.setItem('user_settings_toggles', JSON.stringify(toggles));
+      localStorage.setItem('user_settings_theme', theme);
+      setSavedState("All preferences and profile details have been saved.");
+      toast.success("Settings saved successfully!");
+    } catch (e) {
+      toast.error("Failed to save settings.");
+    }
   };
 
   const toggleButtonClass = (active: boolean) =>

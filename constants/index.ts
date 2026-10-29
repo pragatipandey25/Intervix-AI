@@ -206,25 +206,118 @@ export const interviewCovers = [
 
 export const dummyInterviews: Interview[] = [
   {
-    id: "1",
-    userId: "user1",
+    id: "demo-interview-1",
+    userId: "system",
     role: "Frontend Developer",
     type: "Technical",
     techstack: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
     level: "Junior",
-    questions: ["What is React?"],
-    finalized: false,
-    createdAt: "2024-03-15T10:00:00Z",
+    questions: [
+      "Can you explain the difference between state and props in React?",
+      "How does the Virtual DOM work and why does React use reconciliation?",
+      "What are React hooks, and what rules must you follow when using them?",
+      "How would you optimize a slow-rendering React component?",
+      "What is the difference between Server Components and Client Components in Next.js?"
+    ],
+    finalized: true,
+    createdAt: "2025-01-15T10:00:00Z",
   },
   {
-    id: "2",
-    userId: "user1",
-    role: "Full Stack Developer",
+    id: "demo-interview-2",
+    userId: "system",
+    role: "Full Stack Engineer",
     type: "Mixed",
-    techstack: ["Node.js", "Express", "MongoDB", "React"],
+    techstack: ["Node.js", "Express", "PostgreSQL", "React", "Docker"],
     level: "Senior",
-    questions: ["What is Node.js?"],
-    finalized: false,
-    createdAt: "2024-03-14T15:30:00Z",
+    questions: [
+      "Describe how you design a scalable RESTful or GraphQL API with authentication and rate limiting.",
+      "How do you handle database indexing and query optimization when tables grow to millions of rows?",
+      "Tell me about a time you resolved a critical production incident or major bottleneck.",
+      "Explain the trade-offs between monolithic architecture and microservices in early-stage products.",
+      "How do you approach automated testing, CI/CD, and deployment rollback strategies?"
+    ],
+    finalized: true,
+    createdAt: "2025-01-14T15:30:00Z",
   },
+  {
+    id: "demo-interview-3",
+    userId: "system",
+    role: "Backend & Cloud Engineer",
+    type: "Technical",
+    techstack: ["Python", "FastAPI", "Redis", "Docker", "AWS"],
+    level: "Mid",
+    questions: [
+      "How do you manage background asynchronous tasks and job queues in web applications?",
+      "Explain caching strategies such as Cache-Aside and how you avoid cache stampedes.",
+      "How do you ensure data consistency across multiple distributed services or databases?",
+      "Describe the trade-offs between relational databases and NoSQL document stores.",
+      "How would you design a distributed rate limiter to protect public endpoints?"
+    ],
+    finalized: true,
+    createdAt: "2025-01-12T11:00:00Z",
+  },
+  {
+    id: "demo-interview-4",
+    userId: "system",
+    role: "Engineering Team Lead",
+    type: "Behavioral",
+    techstack: ["System Design", "Agile", "Mentorship", "Architecture"],
+    level: "Lead",
+    questions: [
+      "Tell me about a time when you had to resolve a technical disagreement between senior engineers.",
+      "How do you balance delivering business features quickly versus paying down technical debt?",
+      "Describe a situation where a critical deadline was at risk and how you steered the team to delivery.",
+      "How do you mentor junior developers and foster an engineering culture of psychological safety?",
+      "Walk me through a technical failure under your watch and what you learned from it."
+    ],
+    finalized: true,
+    createdAt: "2025-01-10T09:00:00Z",
+  }
 ];
+
+export const dummyFeedbacks: Record<string, Feedback> = {
+  "demo-interview-1": {
+    id: "feedback-demo-1",
+    interviewId: "demo-interview-1",
+    totalScore: 88,
+    categoryScores: [
+      {
+        name: "Communication Skills",
+        score: 90,
+        comment: "Excellent articulation, concise explanations, and structured responses.",
+      },
+      {
+        name: "Technical Knowledge",
+        score: 86,
+        comment: "Strong understanding of React lifecycle, hooks, and DOM diffing.",
+      },
+      {
+        name: "Problem Solving",
+        score: 88,
+        comment: "Proposed clean memoization and code-splitting strategies for performance issues.",
+      },
+      {
+        name: "Cultural Fit",
+        score: 92,
+        comment: "Enthusiastic, team-oriented mindset with strong empathy for user experience.",
+      },
+      {
+        name: "Confidence and Clarity",
+        score: 84,
+        comment: "Spoke confidently with clear voice pacing and minimal filler words.",
+      },
+    ],
+    strengths: [
+      "Deep foundational understanding of modern React and Next.js paradigms.",
+      "Clear, structured communication using real-world component examples.",
+      "Proactive focus on performance optimization and accessibility.",
+    ],
+    areasForImprovement: [
+      "Could elaborate more on edge rendering and streaming SSR mechanisms.",
+      "Consider mentioning automated unit test cases when discussing component state.",
+    ],
+    finalAssessment:
+      "Alex demonstrated solid junior-to-mid frontend engineering knowledge with impressive clarity and structured thinking. Highly recommended for modern frontend positions.",
+    createdAt: "2025-01-16T14:20:00Z",
+  },
+};

@@ -50,9 +50,37 @@ Generate personalized interview questions using AI.
 
 ### 🎤 Interactive Interview Experience
 
-- Realistic interview flow
-- AI-generated questions
+- Realistic interview flow with step-by-step navigation
+- Built-in Voice-to-Text (STT) and Text-to-Speech (TTS) question playback
+- Dual-mode mock interview room (Interactive Mode + Vapi Voice Call)
+- AI-generated evaluation & structured feedback scoring across 5 key competencies
 - Interview completion tracking
+
+---
+
+### 📝 AI Resume Analysis & ATS Scanner
+
+- Upload or paste resume experience
+- Instant ATS compatibility scoring against target role
+- Missing keyword gap identification
+- Action-oriented bullet point rewrites (X-Y-Z formula)
+- Direct generation of personalized mock interview questions from resume bullets
+
+---
+
+### 📚 Targeted Practice Drills
+
+- Topic tracks for Frontend, Backend, System Design, Behavioral (STAR), and DSA
+- Model answer outlines and interviewer guidance
+- 1-click launch into targeted mock interview sessions
+
+---
+
+### ⭐ Saved Question Bank
+
+- Searchable, filterable library of core tech questions
+- Key concepts and interviewer intent notes
+- Ability to add custom questions and copy notes
 - Professional interview interface
 
 ---

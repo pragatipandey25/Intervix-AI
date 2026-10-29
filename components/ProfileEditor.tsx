@@ -50,12 +50,12 @@ const getFormState = (user: User): ProfileFormState => ({
   name: user.name || "",
   email: user.email || "",
   phoneNumber: user.phoneNumber || "",
-  role: user.role || "AI Interview Candidate",
-  country: user.country || "",
-  timeZone: user.timeZone || "",
+  role: user.role || "Founder & Lead Engineer",
+  country: user.country || "India",
+  timeZone: user.timeZone || "Asia/Kolkata (IST)",
   bio:
     user.bio ||
-    "Aspiring product-minded engineer preparing for high-stakes interviews.",
+    "Founder & Lead Engineer of Intervix AI. Passionate about AI-powered career growth, full-stack architecture, and building scalable developer tools.",
 });
 
 const computeCompletion = (state: ProfileFormState) => {

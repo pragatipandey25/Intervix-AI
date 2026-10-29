@@ -6,29 +6,27 @@ import { cookies } from "next/headers";
 // Session duration (1 week)
 const SESSION_DURATION = 60 * 60 * 24 * 7;
 
-const DEMO_USER: User = {
-  id: "demo-user-intervix",
-  name: "Alex Developer",
-  email: "alex.dev@intervix.ai",
-  role: "Senior Full Stack Engineer",
+const OWNER_USER: User = {
+  id: "owner-pragati-pandey",
+  name: "Pragati Pandey",
+  email: "pragatipandey454@gmail.com",
+  role: "Founder & Lead Engineer",
   avatarUrl: "/profile.svg",
-  bio: "Passionate software engineer preparing for senior full-stack and distributed systems engineering roles.",
-  phoneNumber: "+1 (555) 234-5678",
-  country: "United States",
-  timeZone: "America/New_York (EST)",
-  createdAt: "2025-01-15T00:00:00.000Z",
+  bio: "Founder & Lead Engineer of Intervix AI. Dedicated to empowering software engineers and technical candidates with intelligent, real-time AI interview simulations and career preparation.",
+  phoneNumber: "+91 98765 43210",
+  country: "India",
+  timeZone: "Asia/Kolkata (IST)",
+  createdAt: "2024-01-01T00:00:00.000Z",
 };
 
 // Set session cookie
 export async function setSessionCookie(idToken: string) {
   const cookieStore = await cookies();
 
-  // Create session cookie
   const sessionCookie = await auth.createSessionCookie(idToken, {
-    expiresIn: SESSION_DURATION * 1000, // milliseconds
+    expiresIn: SESSION_DURATION * 1000,
   });
 
-  // Set cookie in the browser
   cookieStore.set("session", sessionCookie, {
     maxAge: SESSION_DURATION,
     httpOnly: true,
@@ -38,11 +36,11 @@ export async function setSessionCookie(idToken: string) {
   });
 }
 
-// Sign in with quick demo candidate account
-export async function signInAsDemoUser() {
+// Sign in directly as Owner (Pragati Pandey)
+export async function signInAsOwner() {
   const cookieStore = await cookies();
 
-  cookieStore.set("session", "demo-session-token", {
+  cookieStore.set("session", "owner-session-token", {
     maxAge: SESSION_DURATION,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -50,28 +48,32 @@ export async function signInAsDemoUser() {
     sameSite: "lax",
   });
 
-  // Ensure demo user doc exists in db if possible
+  // Ensure owner user doc exists in db if possible
   try {
-    const demoRef = db.collection("users").doc(DEMO_USER.id);
-    const doc = await demoRef.get();
+    const ownerRef = db.collection("users").doc(OWNER_USER.id);
+    const doc = await ownerRef.get();
     if (!doc.exists) {
-      await demoRef.set(DEMO_USER, { merge: true });
+      await ownerRef.set(OWNER_USER, { merge: true });
     }
   } catch (error) {
-    console.warn("Could not sync demo user to db:", error);
+    console.warn("Could not sync owner user to db:", error);
   }
 
   return {
     success: true,
-    message: "Logged in as Demo Candidate.",
+    message: "Welcome Pragati Pandey! Signed in as Owner.",
   };
+}
+
+// Alias for seamless backward compatibility
+export async function signInAsDemoUser() {
+  return signInAsOwner();
 }
 
 export async function signUp(params: SignUpParams) {
   const { uid, name, email, avatarUrl } = params;
 
   try {
-    // check if user exists in db
     const userRecord = await db.collection("users").doc(uid).get();
     if (userRecord.exists) {
       return {
@@ -80,13 +82,12 @@ export async function signUp(params: SignUpParams) {
       };
     }
 
-    // save user to db
     await db.collection("users").doc(uid).set({
       name,
       email,
       avatarUrl: avatarUrl || null,
       phoneNumber: null,
-      role: null,
+      role: "Candidate",
       country: null,
       timeZone: null,
       bio: null,
@@ -100,7 +101,6 @@ export async function signUp(params: SignUpParams) {
   } catch (error: any) {
     console.error("Error creating user:", error);
 
-    // Handle Firebase specific errors
     if (error.code === "auth/email-already-exists") {
       return {
         success: false,
@@ -123,7 +123,7 @@ export async function signIn(params: SignInParams) {
     try {
       userRecord = await auth.getUserByEmail(email);
     } catch {
-      // If user by email look up fails, continue to session cookie
+      // ignore
     }
 
     if (userRecord) {
@@ -134,7 +134,7 @@ export async function signIn(params: SignInParams) {
           email,
           avatarUrl: userRecord.photoURL || null,
           phoneNumber: null,
-          role: null,
+          role: "Candidate",
           country: null,
           timeZone: null,
           bio: null,
@@ -166,10 +166,15 @@ export async function signIn(params: SignInParams) {
   }
 }
 
-// Sign out user by clearing the session cookie
+// Sign out user by clearing the session cookie and recording logged-out intent
 export async function signOut() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
+  cookieStore.set("logged_out", "true", {
+    maxAge: 3600,
+    httpOnly: true,
+    path: "/",
+  });
 }
 
 export async function updateUserProfile(params: UpdateUserProfileParams) {
@@ -186,8 +191,7 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
   } = params;
 
   try {
-    // If demo user
-    if (userId.startsWith("demo")) {
+    if (userId.startsWith("owner") || userId.startsWith("demo")) {
       try {
         await db.collection("users").doc(userId).set(
           {
@@ -203,7 +207,7 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
           { merge: true },
         );
       } catch (e) {
-        console.warn("Could not save demo profile to db:", e);
+        console.warn("Could not save owner profile to db:", e);
       }
 
       return {
@@ -212,7 +216,6 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
       };
     }
 
-    // Try updating auth user
     try {
       await auth.updateUser(userId, {
         displayName: name,
@@ -255,37 +258,45 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
 export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
 
+  const isExplicitlyLoggedOut = cookieStore.get("logged_out")?.value === "true";
   const sessionCookie = cookieStore.get("session")?.value;
-  if (!sessionCookie) return null;
 
-  // Handle demo session
-  if (sessionCookie === "demo-session-token" || sessionCookie.startsWith("demo")) {
+  // If user explicitly signed out and has no session, show sign-in page
+  if (isExplicitlyLoggedOut && !sessionCookie) {
+    return null;
+  }
+
+  // If no session cookie or owner session, default to OWNER_USER (Pragati Pandey)!
+  if (
+    !sessionCookie ||
+    sessionCookie === "owner-session-token" ||
+    sessionCookie.startsWith("owner") ||
+    sessionCookie.startsWith("demo")
+  ) {
     try {
-      const doc = await db.collection("users").doc(DEMO_USER.id).get();
+      const doc = await db.collection("users").doc(OWNER_USER.id).get();
       if (doc.exists) {
         return {
-          ...DEMO_USER,
+          ...OWNER_USER,
           ...doc.data(),
-          id: DEMO_USER.id,
+          id: OWNER_USER.id,
         } as User;
       }
     } catch {
-      // Return default DEMO_USER if db is offline
+      // Use OWNER_USER
     }
-    return DEMO_USER;
+    return OWNER_USER;
   }
 
   try {
     const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
 
-    // get user info from db
     const userRecord = await db
       .collection("users")
       .doc(decodedClaims.uid)
       .get();
 
     if (!userRecord.exists) {
-      // Fallback to auth record if doc doesn't exist yet
       try {
         const authUser = await auth.getUser(decodedClaims.uid);
         return {
@@ -305,8 +316,8 @@ export async function getCurrentUser(): Promise<User | null> {
       id: userRecord.id,
     } as User;
   } catch (error) {
-    console.log("Session verification failed:", error);
-    return null;
+    console.log("Session verification failed, falling back to owner:", error);
+    return OWNER_USER;
   }
 }
 

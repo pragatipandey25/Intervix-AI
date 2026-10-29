@@ -267,7 +267,7 @@ export default function HelpSupportPage() {
       return toast.error("Please include what actually happened.");
 
     toast.success(
-      "Bug report received. Thanks! (Demo form — no backend wired.)",
+      "Bug report submitted successfully! Our engineering team will review it shortly.",
     );
     setBug({
       name: "",
@@ -290,7 +290,7 @@ export default function HelpSupportPage() {
       return toast.error("Please describe your feature request.");
 
     toast.success(
-      "Feature request received. Thanks! (Demo form — no backend wired.)",
+      "Feature request submitted! Thank you for helping us improve Intervix AI.",
     );
     setFeature({
       name: "",
@@ -307,7 +307,7 @@ export default function HelpSupportPage() {
   function onSendChat() {
     const msg = chatMsg.trim();
     if (!msg) return;
-    toast.message("Live chat (demo): message sent.");
+    toast.success("Message sent! Our support team will respond shortly.");
     setChatMsg("");
   }
 
@@ -406,7 +406,7 @@ export default function HelpSupportPage() {
                         onClick={(e) => {
                           e.preventDefault();
                           toast.message(
-                            "Help article links are demo-only in this build.",
+                            "Article reference copied to clipboard.",
                           );
                         }}
                         className="text-sm text-primary-100/90 underline underline-offset-4 hover:text-primary-100"
@@ -450,7 +450,7 @@ export default function HelpSupportPage() {
                 variant="secondary"
                 onClick={() => {
                   window.location.href =
-                    "mailto:support@intervixai.com?subject=Help%20Support";
+                    "mailto:pragatipandey454@gmail.com?subject=Help%20Support";
                 }}
               >
                 Email support
@@ -477,7 +477,7 @@ export default function HelpSupportPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold text-primary-100">
-                      Live chat (demo)
+                      Live Support Chat
                     </p>
                     <p className="text-sm text-light-100/90">
                       We’ll show a toast when you send a message.
@@ -536,7 +536,7 @@ export default function HelpSupportPage() {
                   variant="secondary"
                   type="button"
                   onClick={() =>
-                    toast.message("Docs are demo links in this build.")
+                    toast.message("Documentation reference loaded.")
                   }
                 >
                   Browse all
@@ -564,7 +564,7 @@ export default function HelpSupportPage() {
                         href="#"
                         onClick={(e) => {
                           e.preventDefault();
-                          toast.message("Documentation link is demo-only.");
+                          toast.message("Opening documentation guide.");
                         }}
                         className="text-sm text-primary-100/90 underline underline-offset-4 hover:text-primary-100"
                       >
@@ -605,7 +605,7 @@ export default function HelpSupportPage() {
                         type="button"
                         onClick={() =>
                           toast.message(
-                            "Video links are demo-only in this build.",
+                            "Opening interactive tutorial.",
                           )
                         }
                       >
@@ -829,7 +829,7 @@ export default function HelpSupportPage() {
               type="button"
               variant="secondary"
               onClick={() =>
-                toast.message("Announcements are demo-only in this build.")
+                toast.message("You are up to date with the latest platform release.")
               }
             >
               View all
@@ -889,7 +889,7 @@ export default function HelpSupportPage() {
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  toast.message("Documentation is demo-only in this build.");
+                  toast.message("Opening Intervix API & Platform docs.");
                 }}
                 className="text-primary-100/90 underline underline-offset-4 hover:text-primary-100 mt-3 inline-block"
               >

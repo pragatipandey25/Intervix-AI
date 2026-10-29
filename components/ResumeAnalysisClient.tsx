@@ -37,23 +37,22 @@ export default function ResumeAnalysisClient({ user }: { user: User }) {
   const router = useRouter();
 
   const [resumeText, setResumeText] = useState(
-    `Alex Developer
-Senior Full Stack Engineer | alex.dev@intervix.ai | github.com/alexdev
+    `Pragati Pandey
+Founder & Full Stack Engineer | pragatipandey454@gmail.com | github.com/pragatipandey25
 
 SUMMARY
-Passionate engineer with 5+ years of experience building scalable web applications, REST APIs, and microservices using React, TypeScript, Node.js, and cloud systems.
+Product-minded Full Stack Engineer and Founder of Intervix AI. Experienced in designing responsive, high-performance web applications, scalable REST & GraphQL APIs, and real-time AI assistant workflows using React, TypeScript, Next.js, Node.js, and cloud backends.
 
 EXPERIENCE
-Software Engineer - HighTech Inc (2022 - Present)
-- Worked on the frontend and backend services for customer dashboard.
-- Used React, Next.js, and TypeScript to implement new user features.
-- Fixed database performance bugs and made API queries faster.
-- Built automated tests for continuous delivery pipelines.
+Lead Engineer & Founder - Intervix AI (2024 - Present)
+- Architected and shipped an AI-driven interview preparation platform with real-time speech-to-text, voice simulation, and structured candidate evaluation.
+- Implemented modular Next.js 16 App Router architecture, optimizing server component hydration and bundle efficiency.
+- Built automated AI feedback pipelines generating in-depth scoring across communication, technical depth, and problem solving.
 
-Software Developer - StartUp Hub (2020 - 2022)
-- Created responsive web interfaces using JavaScript and CSS.
-- Developed backend routes using Express and MongoDB.
-- Collaborated with product managers and designers to launch MVP.`
+Full Stack Software Engineer (2022 - 2024)
+- Engineered responsive client interfaces using React, TypeScript, and modern CSS/Tailwind.
+- Developed robust backend API endpoints, database schema migrations, and secure authentication flows.
+- Automated CI/CD deployment pipelines, unit testing suites, and performance benchmarking.`
   );
 
   const [targetRole, setTargetRole] = useState("Full Stack Engineer");

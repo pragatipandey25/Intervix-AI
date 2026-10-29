@@ -52,7 +52,7 @@ const Agent = ({
 
   // Mode: "interactive" (default for interviews) or "vapi" (voice call)
   const [mode, setMode] = useState<"interactive" | "vapi">(
-    type === "generate" ? "vapi" : "interactive"
+    type === "generate" ? "vapi" : "interactive",
   );
 
   // --- Interactive Interview State ---
@@ -73,13 +73,14 @@ const Agent = ({
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastMessage, setLastMessage] = useState<string>("");
 
-  const qList = questions && questions.length > 0
-    ? questions
-    : [
-        "Tell me about yourself and your background in software engineering.",
-        "What are the biggest technical challenges you faced in your most recent project?",
-        "How do you approach debugging complex production issues?",
-      ];
+  const qList =
+    questions && questions.length > 0
+      ? questions
+      : [
+          "Tell me about yourself and your background in software engineering.",
+          "What are the biggest technical challenges you faced in your most recent project?",
+          "How do you approach debugging complex production issues?",
+        ];
 
   // Timer for interactive interview
   useEffect(() => {
@@ -159,7 +160,16 @@ const Agent = ({
         handleGenerateFeedback(messages);
       }
     }
-  }, [messages, callStatus, feedbackId, interviewId, router, type, userId, mode]);
+  }, [
+    messages,
+    callStatus,
+    feedbackId,
+    interviewId,
+    router,
+    type,
+    userId,
+    mode,
+  ]);
 
   // Read current question aloud via SpeechSynthesis
   const speakCurrentQuestion = () => {
@@ -195,7 +205,9 @@ const Agent = ({
       (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      toast.info("Speech recognition is not supported in this browser. You can type your answer.");
+      toast.info(
+        "Speech recognition is not supported in this browser. You can type your answer.",
+      );
       return;
     }
 
@@ -413,13 +425,14 @@ const Agent = ({
                   Question {currentIdx + 1} of {qList.length}
                 </span>
                 <span>
-                  {Math.round(((currentIdx + 1) / qList.length) * 100)}% Complete
+                  {Math.round(((currentIdx + 1) / qList.length) * 100)}%
+                  Complete
                 </span>
               </div>
               {/* Progress bar */}
               <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-primary-200 to-emerald-400 transition-all duration-300"
+                  className="h-full bg-linear-to-r from-primary-200 to-emerald-400 transition-all duration-300"
                   style={{
                     width: `${((currentIdx + 1) / qList.length) * 100}%`,
                   }}
@@ -443,7 +456,9 @@ const Agent = ({
 
                 <div className="flex-1 flex flex-col gap-2">
                   <div className="flex items-center justify-between gap-2">
-                    <p className="text-xs text-light-100/60 font-medium">AI Interviewer</p>
+                    <p className="text-xs text-light-100/60 font-medium">
+                      AI Interviewer
+                    </p>
                     <button
                       type="button"
                       onClick={speakCurrentQuestion}
@@ -459,7 +474,8 @@ const Agent = ({
                         </>
                       ) : (
                         <>
-                          <Volume2 className="size-3.5 text-primary-200" /> Listen
+                          <Volume2 className="size-3.5 text-primary-200" />{" "}
+                          Listen
                         </>
                       )}
                     </button>
@@ -505,7 +521,8 @@ const Agent = ({
                     </>
                   ) : (
                     <>
-                      <Mic className="size-3.5 text-primary-200" /> Dictate with Voice
+                      <Mic className="size-3.5 text-primary-200" /> Dictate with
+                      Voice
                     </>
                   )}
                 </button>
@@ -520,7 +537,10 @@ const Agent = ({
 
               <div className="flex items-center justify-between text-xs text-light-100/50">
                 <span>
-                  Words: {currentAnswer.trim() ? currentAnswer.trim().split(/\s+/).length : 0}
+                  Words:{" "}
+                  {currentAnswer.trim()
+                    ? currentAnswer.trim().split(/\s+/).length
+                    : 0}
                 </span>
                 <span>Press Next to record your response</span>
               </div>

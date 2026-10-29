@@ -41,7 +41,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
 
       <main className="flex-1">{children}</main>
 
-      <div className="mt-auto pt-8">
+      <div className="mt-auto">
         <Footer />
       </div>
     </div>

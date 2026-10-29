@@ -415,11 +415,6 @@ export async function getInterviewsByUserId(
 
   if (sessionList.length > 0) return sessionList;
 
-  // If owner user has no custom interviews yet, return curated platform interviews
-  if (userId.startsWith("owner") || userId.startsWith("demo")) {
-    return [dummyInterviews[0], dummyInterviews[1], dummyInterviews[2]];
-  }
-
   return [];
 }
 
@@ -438,10 +433,6 @@ export async function getUserFeedbacks(userId: string): Promise<Feedback[]> {
     }
   } catch (e) {
     console.warn("Firestore getUserFeedbacks failed:", e);
-  }
-
-  if (userId.startsWith("owner") || userId.startsWith("demo")) {
-    return Object.values(dummyFeedbacks);
   }
 
   return [];

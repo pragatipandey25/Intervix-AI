@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { ShieldCheck, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import {
   createUserWithEmailAndPassword,
@@ -19,7 +19,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
-import { signIn, signUp, signInAsOwner } from "@/lib/actions/auth.action";
+import { signIn, signUp } from "@/lib/actions/auth.action";
 import FormField from "./FormField";
 
 const authFormSchema = (type: FormType) => {
@@ -33,7 +33,6 @@ const authFormSchema = (type: FormType) => {
 const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isOwnerLoading, setIsOwnerLoading] = useState(false);
 
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -139,23 +138,6 @@ const AuthForm = ({ type }: { type: FormType }) => {
     }
   };
 
-  const handleOwnerAccess = async () => {
-    setIsOwnerLoading(true);
-    try {
-      const res = await signInAsOwner();
-      if (res.success) {
-        toast.success("Welcome back Pragati! Signed in as Owner.");
-        router.push("/");
-      } else {
-        toast.error("Sign in failed. Please try again.");
-      }
-    } catch (err: any) {
-      toast.error(`Error: ${err?.message || err}`);
-    } finally {
-      setIsOwnerLoading(false);
-    }
-  };
-
   const isSignIn = type === "sign-in";
 
   return (
@@ -190,7 +172,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                 control={form.control}
                 name="name"
                 label="Full Name"
-                placeholder="e.g. Pragati Pandey"
+                placeholder="Enter your full name"
                 type="text"
               />
             )}
@@ -214,37 +196,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
             <Button
               className="btn w-full flex items-center justify-center gap-2 py-6 rounded-xl font-semibold shadow-md"
               type="submit"
-              disabled={isLoading || isOwnerLoading}
+              disabled={isLoading}
             >
               {isLoading && <Loader2 className="size-4 animate-spin" />}
               <span>{isSignIn ? "Sign In" : "Create Account"}</span>
             </Button>
           </form>
         </Form>
-
-        <div className="flex items-center gap-3 my-1">
-          <div className="h-px bg-white/10 flex-1" />
-          <span className="text-xs uppercase tracking-wider text-light-100/40 font-mono">
-            Or
-          </span>
-          <div className="h-px bg-white/10 flex-1" />
-        </div>
-
-        {/* Owner Quick Access */}
-        <Button
-          type="button"
-          onClick={handleOwnerAccess}
-          disabled={isOwnerLoading || isLoading}
-          variant="secondary"
-          className="w-full flex items-center justify-center gap-2 rounded-xl border border-primary-200/20 hover:border-primary-200/50 py-5 text-xs text-primary-200"
-        >
-          {isOwnerLoading ? (
-            <Loader2 className="size-3.5 animate-spin" />
-          ) : (
-            <ShieldCheck className="size-3.5 text-primary-200" />
-          )}
-          <span>Quick Access as Pragati Pandey (Owner)</span>
-        </Button>
 
         <p className="text-center text-sm text-light-100/70 pt-2">
           {isSignIn ? "Don't have an account?" : "Already registered?"}

@@ -36,6 +36,8 @@ const bases = [
   path.join(process.cwd(), ".next", "static"),
   path.join(process.cwd(), ".next", "static", "chunks"),
   path.join(process.cwd(), ".next", "static", "chunks", "app"),
+  path.join(process.cwd(), ".next", "types"),
+  path.join(process.cwd(), ".next", "types", "app"),
 ];
 
 for (const b of bases) {
@@ -48,7 +50,9 @@ for (const r of routes) {
   try {
     const pServer = path.join(process.cwd(), ".next", "server", r);
     const pStatic = path.join(process.cwd(), ".next", "static", "chunks", r);
+    const pTypes = path.join(process.cwd(), ".next", "types", r);
     fs.mkdirSync(pServer, { recursive: true });
     fs.mkdirSync(pStatic, { recursive: true });
+    fs.mkdirSync(pTypes, { recursive: true });
   } catch {}
 }

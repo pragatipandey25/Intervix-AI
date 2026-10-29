@@ -207,7 +207,7 @@ export const interviewCovers = [
 export const dummyInterviews: Interview[] = [
   {
     id: "intv-frontend-lead",
-    userId: "owner-pragati-pandey",
+    userId: "intervix-curated",
     role: "Frontend Engineer",
     type: "Technical",
     techstack: ["React", "TypeScript", "Next.js", "Tailwind CSS"],
@@ -226,7 +226,7 @@ export const dummyInterviews: Interview[] = [
   },
   {
     id: "intv-fullstack-arch",
-    userId: "owner-pragati-pandey",
+    userId: "intervix-curated",
     role: "Full Stack Engineer",
     type: "Mixed",
     techstack: ["Node.js", "Express", "PostgreSQL", "React", "Docker"],
@@ -245,7 +245,7 @@ export const dummyInterviews: Interview[] = [
   },
   {
     id: "intv-backend-cloud",
-    userId: "owner-pragati-pandey",
+    userId: "intervix-curated",
     role: "Backend & Cloud Engineer",
     type: "Technical",
     techstack: ["Python", "FastAPI", "Redis", "Docker", "AWS"],
@@ -264,7 +264,7 @@ export const dummyInterviews: Interview[] = [
   },
   {
     id: "intv-engineering-lead",
-    userId: "owner-pragati-pandey",
+    userId: "intervix-curated",
     role: "Engineering Team Lead",
     type: "Behavioral",
     techstack: ["System Design", "Agile", "Mentorship", "Architecture"],

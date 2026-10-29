@@ -6,17 +6,17 @@ import { cookies } from "next/headers";
 // Session duration (1 week)
 const SESSION_DURATION = 60 * 60 * 24 * 7;
 
-const OWNER_USER: User = {
-  id: "owner-pragati-pandey",
+const OWNER_EMAIL = "pragatipandey454@gmail.com";
+
+const OWNER_DEFAULTS = {
   name: "Pragati Pandey",
-  email: "pragatipandey454@gmail.com",
+  email: OWNER_EMAIL,
   role: "Founder & Lead Engineer",
   avatarUrl: "/profile.svg",
   bio: "Founder & Lead Engineer of Intervix AI. Dedicated to empowering software engineers and technical candidates with intelligent, real-time AI interview simulations and career preparation.",
   phoneNumber: "+91 98765 43210",
   country: "India",
   timeZone: "Asia/Kolkata (IST)",
-  createdAt: "2024-01-01T00:00:00.000Z",
 };
 
 // Set session cookie
@@ -36,40 +36,6 @@ export async function setSessionCookie(idToken: string) {
   });
 }
 
-// Sign in directly as Owner (Pragati Pandey)
-export async function signInAsOwner() {
-  const cookieStore = await cookies();
-
-  cookieStore.set("session", "owner-session-token", {
-    maxAge: SESSION_DURATION,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    sameSite: "lax",
-  });
-
-  // Ensure owner user doc exists in db if possible
-  try {
-    const ownerRef = db.collection("users").doc(OWNER_USER.id);
-    const doc = await ownerRef.get();
-    if (!doc.exists) {
-      await ownerRef.set(OWNER_USER, { merge: true });
-    }
-  } catch (error) {
-    console.warn("Could not sync owner user to db:", error);
-  }
-
-  return {
-    success: true,
-    message: "Welcome Pragati Pandey! Signed in as Owner.",
-  };
-}
-
-// Alias for seamless backward compatibility
-export async function signInAsDemoUser() {
-  return signInAsOwner();
-}
-
 export async function signUp(params: SignUpParams) {
   const { uid, name, email, avatarUrl } = params;
 
@@ -82,15 +48,17 @@ export async function signUp(params: SignUpParams) {
       };
     }
 
+    const isOwner = email.toLowerCase().trim() === OWNER_EMAIL;
+
     await db.collection("users").doc(uid).set({
-      name,
+      name: isOwner ? (name || OWNER_DEFAULTS.name) : name,
       email,
-      avatarUrl: avatarUrl || null,
-      phoneNumber: null,
-      role: "Candidate",
-      country: null,
-      timeZone: null,
-      bio: null,
+      avatarUrl: avatarUrl || (isOwner ? OWNER_DEFAULTS.avatarUrl : null),
+      phoneNumber: isOwner ? OWNER_DEFAULTS.phoneNumber : null,
+      role: isOwner ? OWNER_DEFAULTS.role : "Candidate",
+      country: isOwner ? OWNER_DEFAULTS.country : null,
+      timeZone: isOwner ? OWNER_DEFAULTS.timeZone : null,
+      bio: isOwner ? OWNER_DEFAULTS.bio : null,
       createdAt: new Date().toISOString(),
     });
 
@@ -128,16 +96,20 @@ export async function signIn(params: SignInParams) {
 
     if (userRecord) {
       const userDoc = await db.collection("users").doc(userRecord.uid).get();
+      const isOwner = email.toLowerCase().trim() === OWNER_EMAIL;
+
       if (!userDoc.exists) {
         await db.collection("users").doc(userRecord.uid).set({
-          name: userRecord.displayName || email.split("@")[0],
+          name: isOwner
+            ? (userRecord.displayName || OWNER_DEFAULTS.name)
+            : (userRecord.displayName || email.split("@")[0]),
           email,
-          avatarUrl: userRecord.photoURL || null,
-          phoneNumber: null,
-          role: "Candidate",
-          country: null,
-          timeZone: null,
-          bio: null,
+          avatarUrl: userRecord.photoURL || (isOwner ? OWNER_DEFAULTS.avatarUrl : null),
+          phoneNumber: isOwner ? OWNER_DEFAULTS.phoneNumber : null,
+          role: isOwner ? OWNER_DEFAULTS.role : "Candidate",
+          country: isOwner ? OWNER_DEFAULTS.country : null,
+          timeZone: isOwner ? OWNER_DEFAULTS.timeZone : null,
+          bio: isOwner ? OWNER_DEFAULTS.bio : null,
           createdAt: new Date().toISOString(),
         });
       } else if (!userDoc.data()?.avatarUrl && userRecord.photoURL) {
@@ -166,15 +138,10 @@ export async function signIn(params: SignInParams) {
   }
 }
 
-// Sign out user by clearing the session cookie and recording logged-out intent
+// Sign out user by clearing the session cookie
 export async function signOut() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
-  cookieStore.set("logged_out", "true", {
-    maxAge: 3600,
-    httpOnly: true,
-    path: "/",
-  });
 }
 
 export async function updateUserProfile(params: UpdateUserProfileParams) {
@@ -191,31 +158,6 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
   } = params;
 
   try {
-    if (userId.startsWith("owner") || userId.startsWith("demo")) {
-      try {
-        await db.collection("users").doc(userId).set(
-          {
-            name,
-            email,
-            phoneNumber: phoneNumber || null,
-            role: role || null,
-            country: country || null,
-            timeZone: timeZone || null,
-            bio: bio || null,
-            avatarUrl: avatarUrl || null,
-          },
-          { merge: true },
-        );
-      } catch (e) {
-        console.warn("Could not save owner profile to db:", e);
-      }
-
-      return {
-        success: true,
-        message: "Profile updated successfully.",
-      };
-    }
-
     try {
       await auth.updateUser(userId, {
         displayName: name,
@@ -257,35 +199,10 @@ export async function updateUserProfile(params: UpdateUserProfileParams) {
 // Get current user from session cookie
 export async function getCurrentUser(): Promise<User | null> {
   const cookieStore = await cookies();
-
-  const isExplicitlyLoggedOut = cookieStore.get("logged_out")?.value === "true";
   const sessionCookie = cookieStore.get("session")?.value;
 
-  // If user explicitly signed out and has no session, show sign-in page
-  if (isExplicitlyLoggedOut && !sessionCookie) {
+  if (!sessionCookie) {
     return null;
-  }
-
-  // If no session cookie or owner session, default to OWNER_USER (Pragati Pandey)!
-  if (
-    !sessionCookie ||
-    sessionCookie === "owner-session-token" ||
-    sessionCookie.startsWith("owner") ||
-    sessionCookie.startsWith("demo")
-  ) {
-    try {
-      const doc = await db.collection("users").doc(OWNER_USER.id).get();
-      if (doc.exists) {
-        return {
-          ...OWNER_USER,
-          ...doc.data(),
-          id: OWNER_USER.id,
-        } as User;
-      }
-    } catch {
-      // Use OWNER_USER
-    }
-    return OWNER_USER;
   }
 
   try {
@@ -299,25 +216,34 @@ export async function getCurrentUser(): Promise<User | null> {
     if (!userRecord.exists) {
       try {
         const authUser = await auth.getUser(decodedClaims.uid);
+        const isOwner = authUser.email?.toLowerCase().trim() === OWNER_EMAIL;
         return {
           id: authUser.uid,
-          name: authUser.displayName || authUser.email?.split("@")[0] || "User",
+          name: authUser.displayName || (isOwner ? OWNER_DEFAULTS.name : authUser.email?.split("@")[0] || "User"),
           email: authUser.email || "",
-          avatarUrl: authUser.photoURL || null,
-          role: "Candidate",
+          avatarUrl: authUser.photoURL || (isOwner ? OWNER_DEFAULTS.avatarUrl : null),
+          role: isOwner ? OWNER_DEFAULTS.role : "Candidate",
+          bio: isOwner ? OWNER_DEFAULTS.bio : null,
+          country: isOwner ? OWNER_DEFAULTS.country : null,
+          timeZone: isOwner ? OWNER_DEFAULTS.timeZone : null,
+          phoneNumber: isOwner ? OWNER_DEFAULTS.phoneNumber : null,
         } as User;
       } catch {
         return null;
       }
     }
 
+    const userData = userRecord.data();
+    const isOwner = userData?.email?.toLowerCase().trim() === OWNER_EMAIL;
+
     return {
-      ...userRecord.data(),
+      ...userData,
       id: userRecord.id,
+      role: isOwner ? OWNER_DEFAULTS.role : (userData?.role || "Candidate"),
     } as User;
   } catch (error) {
-    console.log("Session verification failed, falling back to owner:", error);
-    return OWNER_USER;
+    console.error("Session verification failed:", error);
+    return null;
   }
 }
 
